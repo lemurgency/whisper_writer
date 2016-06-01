@@ -1,6 +1,6 @@
 (function(){
 	window.whisp = {};
-	var d = 20;
+	var d = 10;
 	
 	function fillInTriangle(startCoords, lengthOfSide){
 		var coords = randomizeStartCoords(startCoords);
@@ -32,8 +32,7 @@
 	}
 
 	function fillInTriangle2(startCoords, lengthOfSide){
-		// var coords = randomizeStartCoords(startCoords);
-		var coords = startCoords;
+		var coords = randomizeStartCoords(startCoords);
 		ctx.moveTo(coords[0][0],coords[0][1]);
 		ctx.lineTo(coords[1][0],coords[1][1]);
 		ctx.lineTo(coords[2][0],coords[2][1]);
@@ -67,7 +66,8 @@
 		var numberOfPoints = startCoords.length -1;
 		var slimmed = startCoords.slice(0,numberOfPoints);
 
-		var shuffled = shuffle(slimmed);
+		var random = Math.round(Math.random() * numberOfPoints);
+		var shuffled = shuffle(slimmed, random);
 
 		shuffled.push(shuffled[0]);
 
@@ -75,20 +75,18 @@
 
 	}
 
-	function shuffle(array) {
+	function shuffle(array, numberOfShifts) {
 	  var currentIndex = array.length, temporaryValue, randomIndex;
-
+	  var x = array[0]
 	  // While there remain elements to shuffle...
-	  while (0 !== currentIndex) {
+	  for(var i = 0; i < numberOfShifts; i++){
+	  	var shifted = array.shift();
+	  	array.push(shifted);
+	  }
 
-	    // Pick a remaining element...
-	    randomIndex = Math.floor(Math.random() * currentIndex);
-	    currentIndex -= 1;
-
-	    // And swap it with the current element.
-	    temporaryValue = array[currentIndex];
-	    array[currentIndex] = array[randomIndex];
-	    array[randomIndex] = temporaryValue;
+	  var random = Math.round(Math.random() * 1);
+	  if(random){
+	  	array.reverse();
 	  }
 
 	  return array;
