@@ -1,6 +1,6 @@
 (function(){
 	window.whisp = {};
-	var d = 7;
+	var d = 10;
 	
 	function fillInShape(startCoords, lengthOfSide){
 		var coords = randomizeStartCoords(startCoords);
@@ -24,10 +24,12 @@
 			var oneAhead = coords[coordsLength-shapeSidesNeg1]; 
 
 			var vector = [oneAhead[0] - twoAhead[0], oneAhead[1] - twoAhead[1]]; //oneAhead to twoAhead 
-
+			var xDist = Math.abs(twoAhead[0]-oneAhead[0])
+			var yDist = Math.abs(twoAhead[1]-oneAhead[1])
+			var vectorLength = Math.sqrt(xDist * xDist + yDist * yDist)
 			var divisor = Math.sqrt(vector[0]*vector[0] + vector[1]*vector[1]);
 			var u = [vector[0]/divisor, vector[1]/divisor];
-
+			d = Math.round(Math.random() * Math.sqrt(vectorLength))
 			var du = [u[0]*d, u[1]*d];
 
 			var point = [oneAhead[0] - du[0], oneAhead[1] - du[1]]
