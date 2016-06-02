@@ -1,59 +1,36 @@
 (function(){
 	window.whisp = {};
-	var d = 10;
+	var d = 7;
 	
-	function fillInTriangle(startCoords, lengthOfSide){
+	function fillInShape(startCoords, lengthOfSide){
 		var coords = randomizeStartCoords(startCoords);
-		ctx.moveTo(coords[0][0],coords[0][1]);
-		ctx.lineTo(coords[1][0],coords[1][1]);
-		ctx.lineTo(coords[2][0],coords[2][1]);
-		ctx.lineTo(coords[3][0],coords[3][1]);	
+		var shapeSides = startCoords.length;
+		var shapeSidesNeg1 = startCoords.length - 1;
+		var shapeSidesNeg2 = startCoords.length - 2;
 
-		for(var i =0; i < lengthOfSide; i++){
-			var coordsLength = coords.length;
-			var last = coords[coordsLength-1];
-			var twoLast = coords[coordsLength-2];
-			var threeLast = coords[coordsLength-3]; 
-
-			var vector = [threeLast[0] - twoLast[0], threeLast[1] - twoLast[1]]; //threeLast to twoLast 
-
-			var divisor = Math.sqrt(vector[0]*vector[0] + vector[1]*vector[1]);
-			var u = [vector[0]/divisor, vector[1]/divisor];
-
-			var du = [u[0]*d, u[1]*d];
-
-			var point = [threeLast[0] - du[0], threeLast[1] - du[1]]
-
-
-			coords.push(point)
-			ctx.lineTo(point[0], point[1])
+		for(var coordNum = 0; coordNum < coords.length; coordNum++){
+			var coord1 = coords[coordNum][0];
+			var coord2 = coords[coordNum][1];
+			if(coordNum === 0){
+				ctx.moveTo(coord1,coord2);
+			} else {
+				ctx.lineTo(coord1,coord2);
+			}
 		}
-		ctx.stroke();
-	}
-
-	function fillInTriangle2(startCoords, lengthOfSide){
-		var coords = randomizeStartCoords(startCoords);
-		ctx.moveTo(coords[0][0],coords[0][1]);
-		ctx.lineTo(coords[1][0],coords[1][1]);
-		ctx.lineTo(coords[2][0],coords[2][1]);
-		ctx.lineTo(coords[3][0],coords[3][1]);	
-		ctx.lineTo(coords[4][0],coords[4][1]);	
 
 		for(var i =0; i < lengthOfSide; i++){
 			var coordsLength = coords.length;
-			var last = coords[coordsLength-1];
-			var twoLast = coords[coordsLength-2];
-			var threeLast = coords[coordsLength-3]; 
-			var fourLast = coords[coordsLength-4]; 
+			var twoAhead = coords[coordsLength-shapeSidesNeg2];
+			var oneAhead = coords[coordsLength-shapeSidesNeg1]; 
 
-			var vector = [fourLast[0] - threeLast[0], fourLast[1] - threeLast[1]]; //fourLast to threeLast 
+			var vector = [oneAhead[0] - twoAhead[0], oneAhead[1] - twoAhead[1]]; //oneAhead to twoAhead 
 
 			var divisor = Math.sqrt(vector[0]*vector[0] + vector[1]*vector[1]);
 			var u = [vector[0]/divisor, vector[1]/divisor];
 
 			var du = [u[0]*d, u[1]*d];
 
-			var point = [fourLast[0] - du[0], fourLast[1] - du[1]]
+			var point = [oneAhead[0] - du[0], oneAhead[1] - du[1]]
 
 
 			coords.push(point)
@@ -63,6 +40,7 @@
 	}
 
 	function randomizeStartCoords(startCoords){
+		console.log(startCoords.length)
 		var numberOfPoints = startCoords.length -1;
 		var slimmed = startCoords.slice(0,numberOfPoints);
 
@@ -92,7 +70,7 @@
 	  return array;
 	}
 
-	whisp.buildMap = function(canvasSize, triSize){
+	whisp.buildMapOnlyShapes = function(canvasSize, triSize){
 		for(var x = 0; x<canvasSize/triSize; x++){
 			for(var y = 0; y<canvasSize/triSize; y++){
 				var coords = [
@@ -108,8 +86,8 @@
 						[(x+1)*triSize,y*triSize]
 					]
 
-				fillInTriangle(coords, triSize);
-				fillInTriangle(coords2, triSize);
+				fillInShape(coords, triSize);
+				fillInShape(coords2, triSize);
 
 			}
 		}
@@ -140,10 +118,43 @@
 
 				var random = Math.round(Math.random())
 				if(random == 1) {
-					fillInTriangle2(coords3, triSize)
+					fillInShape(coords3, triSize)
 				} else {
-					fillInTriangle(coords1, triSize);
-					fillInTriangle(coords2, triSize);
+					fillInShape(coords1, triSize);
+					fillInShape(coords2, triSize);
+				}
+			}
+		}
+	}	
+	whisp.buildMap2 = function(canvasSize, triSize){
+		for(var x = 0; x<canvasSize/triSize; x++){
+			for(var y = 0; y<canvasSize/triSize; y++){
+				var coords1 = [
+					[x*triSize,y*triSize],
+					[(x+1)*triSize,(y+1)*triSize],
+					[x*triSize,(y+1)*triSize],
+					[x*triSize,y*triSize]
+				]
+				var coords2 = [
+					[(x+1)*triSize,y*triSize],
+					[(x+1)*triSize,(y+1)*triSize],
+					[x*triSize,y*triSize],
+					[(x+1)*triSize,y*triSize]
+				]
+				var coords3 = [
+					[x*triSize,y*triSize],
+					[(x+1)*triSize,y*triSize],
+					[(x+1)*triSize,(y+1)*triSize],
+					[x*triSize,(y+1)*triSize],
+					[x*triSize,y*triSize]
+				]
+
+				var random = Math.round(Math.random())
+				if(random == 1) {
+					fillInShape(coords3, triSize)
+				} else {
+					fillInShape(coords1, triSize);
+					fillInShape(coords2, triSize);
 				}
 			}
 		}
